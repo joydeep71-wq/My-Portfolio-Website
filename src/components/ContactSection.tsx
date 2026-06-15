@@ -14,7 +14,8 @@ export default function ContactSection() {
   });
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [showCRM, setShowCRM] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [statusMessage, setStatusMessage] = useState('');
 
   // Load old messages from local storage
   useEffect(() => {
@@ -28,13 +29,16 @@ export default function ContactSection() {
     }
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) {
       setStatus('error');
+      setStatusMessage('Please write operational inputs!');
       setTimeout(() => setStatus('idle'), 3000);
       return;
     }
+
+    setStatus('submitting');
 
     const newMessage: ContactMessage = {
       name: formData.name,
@@ -45,6 +49,42 @@ export default function ContactSection() {
       timestamp: new Date().toLocaleString()
     };
 
+    const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+    const isAccessKeyValid = accessKey && accessKey !== 'YOUR_WEB3FORMS_ACCESS_KEY';
+    
+    let submittedSuccessfully = false;
+
+    if (isAccessKeyValid) {
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            access_key: accessKey,
+            name: formData.name,
+            email: formData.email,
+            subject: `New Portfolio Inquiry: ${formData.subject}`,
+            from_name: `${formData.name} (${formData.company || 'Independent'})`,
+            message: formData.message,
+            company: formData.company || 'Independent'
+          })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          submittedSuccessfully = true;
+        } else {
+          console.error("Web3Forms Submission Error:", data);
+        }
+      } catch (err) {
+        console.error("Failed to submit to Web3Forms:", err);
+      }
+    }
+
+    // Fallback/Log locally
     const updated = [newMessage, ...messages];
     setMessages(updated);
     localStorage.setItem('joydeep_das_messages', JSON.stringify(updated));
@@ -58,7 +98,19 @@ export default function ContactSection() {
       message: ''
     });
 
-    setStatus('success');
+    if (isAccessKeyValid) {
+      if (submittedSuccessfully) {
+        setStatus('success');
+        setStatusMessage('Inquiry transmitted & logged!');
+      } else {
+        setStatus('error');
+        setStatusMessage('Transmission failed. Logged locally.');
+      }
+    } else {
+      setStatus('success');
+      setStatusMessage('Inquiry logged locally! (Key not configured)');
+    }
+
     setTimeout(() => setStatus('idle'), 5000);
   };
 
@@ -170,10 +222,20 @@ export default function ContactSection() {
             <div className="pt-2 flex items-center justify-between gap-4">
               <button
                 type="submit"
-                className="px-6 py-2.5 rounded-xl text-xs font-sans font-semibold tracking-wide bg-amber-500 hover:bg-amber-600 text-zinc-950 flex items-center gap-2 shadow-xs transition-colors cursor-pointer"
+                disabled={status === 'submitting'}
+                className="px-6 py-2.5 rounded-xl text-xs font-sans font-semibold tracking-wide bg-amber-500 hover:bg-amber-600 disabled:bg-amber-500/50 disabled:text-zinc-650 text-zinc-950 flex items-center gap-2 shadow-xs transition-colors cursor-pointer disabled:cursor-not-allowed"
               >
-                <LucideIcons.Send size={13} />
-                <span>Transmit Secure Inquiry</span>
+                {status === 'submitting' ? (
+                  <>
+                    <LucideIcons.Loader2 size={13} className="animate-spin" />
+                    <span>Transmitting...</span>
+                  </>
+                ) : (
+                  <>
+                    <LucideIcons.Send size={13} />
+                    <span>Transmit Secure Inquiry</span>
+                  </>
+                )}
               </button>
 
               <AnimatePresence mode="wait">
@@ -185,7 +247,7 @@ export default function ContactSection() {
                     className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400"
                   >
                     <LucideIcons.CheckCircle size={14} />
-                    <span>Inquiry logged successfully!</span>
+                    <span>{statusMessage}</span>
                   </motion.div>
                 )}
                 {status === 'error' && (
@@ -196,7 +258,7 @@ export default function ContactSection() {
                     className="flex items-center gap-1.5 text-xs text-red-500"
                   >
                     <LucideIcons.AlertTriangle size={14} />
-                    <span>Please write operational inputs!</span>
+                    <span>{statusMessage}</span>
                   </motion.div>
                 )}
               </AnimatePresence>
