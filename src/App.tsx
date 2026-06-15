@@ -5,6 +5,7 @@ import * as LucideIcons from 'lucide-react';
 // Theme & Content Data
 import { ThemeProvider, useTheme } from './components/ThemeContext';
 import { EXECUTIVE_HEADER, EDUCATION_CREDENTIALS } from './data';
+import profilePic from '@/assets/profile.jpg';
 
 // Custom Segment Components
 import ExecutiveStats from './components/ExecutiveStats';
@@ -205,60 +206,78 @@ function PortfolioApp() {
 
         {/* 1. HERO EXECUTIVE SUMMARY SECTION */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center" id="hero-sec">
-          <div className="lg:col-span-7 space-y-6 text-left">
-            
-            {/* Visual Experience Badge */}
-            <div className="inline-flex items-center gap-2 bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/20 shadow-xs">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-              </span>
-              <span className="text-xs font-mono font-medium tracking-wide text-[#d97706] dark:text-amber-400">
-                Senior Management Executive • {EXECUTIVE_HEADER.yearsOfExperience} Experience
-              </span>
+          <div className="lg:col-span-8 flex flex-col md:flex-row gap-8 items-center md:items-start text-left">
+            {/* Executive Portrait Card */}
+            <div className="relative shrink-0 group">
+              {/* Premium Glow Aura */}
+              <div className="absolute -inset-1.5 bg-gradient-to-tr from-[#d97706] to-[#f59e0b] rounded-3xl blur-md opacity-45 group-hover:opacity-75 transition duration-500" />
+              {/* Image Frame */}
+              <div className="relative w-40 h-52 md:w-48 md:h-64 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800/80 bg-white shadow-xl">
+                <img 
+                  src={profilePic} 
+                  alt={EXECUTIVE_HEADER.name} 
+                  className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500"
+                />
+                {/* Micro reflection layer for realism */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 pointer-events-none" />
+              </div>
             </div>
 
-            {/* Main Visual Headline */}
-            <h1 className="text-5xl md:text-6xl font-display font-light tracking-tight leading-tight text-zinc-950 dark:text-zinc-50">
-              Transforming <br />
-              <span className="font-bold relative text-zinc-900 dark:text-zinc-50">
-                Automotive After-Sales
-                <span className="absolute bottom-1 left-0 w-full h-[5px] bg-amber-500/20" />
-              </span>
-            </h1>
+            {/* Headline and text content */}
+            <div className="space-y-6 flex-1">
+              {/* Visual Experience Badge */}
+              <div className="inline-flex items-center gap-2 bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/20 shadow-xs">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                </span>
+                <span className="text-xs font-mono font-medium tracking-wide text-[#d97706] dark:text-amber-400">
+                  Senior Management Executive • {EXECUTIVE_HEADER.yearsOfExperience} Experience
+                </span>
+              </div>
 
-            {/* Title Tag */}
-            <h2 className="text-lg md:text-xl font-sans tracking-wide text-zinc-700 dark:text-zinc-300 font-light max-w-xl">
-              {EXECUTIVE_HEADER.title}. Currently GM of Eastern India's largest Maruti Suzuki distribution service network.
-            </h2>
+              {/* Main Visual Headline */}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-light tracking-tight leading-tight text-zinc-950 dark:text-zinc-50">
+                Transforming <br />
+                <span className="font-bold relative text-zinc-900 dark:text-zinc-50">
+                  Automotive After-Sales
+                  <span className="absolute bottom-1 left-0 w-full h-[5px] bg-amber-500/20" />
+                </span>
+              </h1>
 
-            {/* Brief introductory bio */}
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed font-sans max-w-2xl font-light">
-              {EXECUTIVE_HEADER.summary}
-            </p>
+              {/* Title Tag */}
+              <h2 className="text-base md:text-lg font-sans tracking-wide text-zinc-700 dark:text-zinc-300 font-light max-w-xl">
+                {EXECUTIVE_HEADER.title}. Currently GM of Eastern India's largest Maruti Suzuki distribution service network.
+              </h2>
 
-            {/* Dynamic CTA button groups */}
-            <div className="flex flex-wrap items-center gap-4 pt-3">
-              <button
-                onClick={() => scrollToSection('contact-section')}
-                className="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-zinc-950 text-xs font-sans font-semibold tracking-wide rounded-xl shadow-md transition-colors flex items-center gap-2 cursor-pointer"
-              >
-                <span>Initiate Consultation</span>
-                <LucideIcons.ArrowRight size={14} />
-              </button>
+              {/* Brief introductory bio */}
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed font-sans max-w-2xl font-light">
+                {EXECUTIVE_HEADER.summary}
+              </p>
 
-              <button
-                onClick={() => scrollToSection('stats-section')}
-                className="px-6 py-3 border border-zinc-200 dark:border-zinc-900 bg-white/40 dark:bg-zinc-950/20 hover:border-zinc-305 dark:hover:border-zinc-850 text-zinc-700 dark:text-zinc-300 text-xs font-sans tracking-wide rounded-xl transition-all flex items-center gap-2 cursor-pointer"
-              >
-                <span>Explore Operational Dashboard</span>
-                <LucideIcons.LineChart size={13} className="text-amber-500" />
-              </button>
+              {/* Dynamic CTA button groups */}
+              <div className="flex flex-wrap items-center gap-4 pt-3">
+                <button
+                  onClick={() => scrollToSection('contact-section')}
+                  className="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-zinc-950 text-xs font-sans font-semibold tracking-wide rounded-xl shadow-md transition-colors flex items-center gap-2 cursor-pointer"
+                >
+                  <span>Initiate Consultation</span>
+                  <LucideIcons.ArrowRight size={14} />
+                </button>
+
+                <button
+                  onClick={() => scrollToSection('stats-section')}
+                  className="px-6 py-3 border border-zinc-200 dark:border-zinc-900 bg-white/40 dark:bg-zinc-950/20 hover:border-zinc-305 dark:hover:border-zinc-850 text-zinc-700 dark:text-zinc-300 text-xs font-sans tracking-wide rounded-xl transition-all flex items-center gap-2 cursor-pointer"
+                >
+                  <span>Explore Operational Dashboard</span>
+                  <LucideIcons.LineChart size={13} className="text-amber-500" />
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Right Column: Premium Interactive Business Card Widget */}
-          <div className="lg:col-span-5 flex items-center justify-center md:pb-6 lg:pb-0">
+          <div className="lg:col-span-4 flex items-center justify-center md:pb-6 lg:pb-0">
             <BusinessCard />
           </div>
         </section>

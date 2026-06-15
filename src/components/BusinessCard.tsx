@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import * as LucideIcons from 'lucide-react';
 import { EXECUTIVE_HEADER } from '../data';
+import profilePic from '@/assets/profile.jpg';
 
 export default function BusinessCard() {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -60,10 +61,14 @@ export default function BusinessCard() {
                 </p>
               </div>
 
-              {/* Logo / Initials Badge */}
-              <span className="w-12 h-12 bg-zinc-800 border border-zinc-700/60 rounded-2xl flex items-center justify-center font-mono font-bold text-lg text-amber-500/95 shadow-inner">
-                {EXECUTIVE_HEADER.initials}
-              </span>
+              {/* Profile Image Badge */}
+              <div className="w-12 h-12 rounded-2xl overflow-hidden border border-zinc-700/60 shadow-inner shrink-0 bg-white">
+                <img 
+                  src={profilePic} 
+                  alt={EXECUTIVE_HEADER.name} 
+                  className="w-full h-full object-cover object-top"
+                />
+              </div>
             </div>
 
             {/* Footer section of card */}
